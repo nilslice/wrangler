@@ -157,10 +157,19 @@ fn prebuilt_url(tool_name: &str, owner: &str, version: &str) -> Option<String> {
             return None;
         };
 
-        let url = format!(
-            "https://workers.cloudflare.com/get-binary/{0}/{1}/v{2}/{3}.tar.gz",
-            owner, tool_name, version, target
-        );
+        let url = if target == "aarch64-apple-darwin" {            
+            let override_url = format!(
+                "https://workers.cloudflare.com/get-override/{0}/{1}/v{2}/{3}.tar.gz",
+                owner, tool_name, version, target
+            );
+            println!("sent to override URL: {}", override_url);
+            override_url
+        } else {
+            format!(
+                "https://workers.cloudflare.com/get-binary/{0}/{1}/v{2}/{3}.tar.gz",
+                owner, tool_name, version, target
+            )
+        };
         Some(url)
     }
 }
